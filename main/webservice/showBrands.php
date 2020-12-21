@@ -18,12 +18,15 @@ class BrandActions
   private $conn;
   public function __construct(mysqli $conn)
   {
-    $this->conn=$conn;
+    $this->conn = $conn;
   }
   /**
    * insert new Brand
    */
-
+  public function addNewBrand(String $userName, String $password)
+  {
+    // webservice is exist before in some where    
+  }
 
   /**
    * get All brands with offset
@@ -33,7 +36,7 @@ class BrandActions
   public function getAllBrandWithOffset(int $offset): void
   {
     $offset = $this->getInput($offset);
-    $resultArray = Array();
+    $resultArray = array();
 
     try {
       // run your code here
@@ -45,8 +48,8 @@ class BrandActions
       if ($result) {
         $rowcount = $result->num_rows;
         if ($rowcount > 0) {
-          while($row =$result->fetch_assoc()){
-            $resultArray[]=$row;
+          while ($row = $result->fetch_assoc()) {
+            $resultArray[] = $row;
           }
         }
       }
@@ -68,7 +71,7 @@ class BrandActions
 
 
   /**
-   * get input and ake sure it secure
+   * get input and make sure it secure
    */
   private function getInput($input)
   {
@@ -86,13 +89,24 @@ class BrandActions
    */
   public function resultJsonEncode($data)
   {
-    if(gettype($data)=='array'){
+    if (gettype($data) == 'array') {
       echo json_encode($data, JSON_UNESCAPED_UNICODE);
-    }else{
+    } else {
       echo json_encode([$data], JSON_UNESCAPED_UNICODE);
     }
   }
 
+  /**
+   * get one brand info for update
+   */
+  public function getBrandInfo(int $id)
+  {
+    $id = $this->getInput($id);
+    
+    $sql = "SELECT `pish_phocamaps_marker_company`.title
+    FROM `pish_phocamaps_marker_company` 
+    INNER JOIN `pish_users` ON `pish_phocamaps_marker_company`.user_id = $id";
+  }
 }
 
 
@@ -105,14 +119,12 @@ $offset = $post['offset'];
 $typeAction = $post['typeAction'];
 
 $brandAction = new BrandActions($conn);
-if($typeAction=='select' && isset($offset)){
+if ($typeAction == 'select' && isset($offset)) {
   //get all brand with offset
   $brandAction->getAllBrandWithOffset($offset);
-}else if($typeAction=='update'){
+} else if ($typeAction == 'update') {
   //update one brand
-}else if($typeAction =='delete'){
+} else if ($typeAction == 'delete') {
   //delete one brand
-}else{
-
+} else {
 }
-
