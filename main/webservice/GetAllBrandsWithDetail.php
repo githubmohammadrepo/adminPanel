@@ -13,7 +13,7 @@ ini_set('error_reporting', E_ALL);
 ini_set('display_errors', 1);
 $object = new stdClass();
 include "connection.php";
-class StoreActions
+class BrandActions
 {
   private $conn;
   public function __construct(mysqli $conn)
@@ -21,29 +21,33 @@ class StoreActions
     $this->conn=$conn;
   }
   /**
-   * insert new Store
+   * insert new Brand
    */
 
 
   /**
-   * get All stores with offset
-   * @param int $offset offset for get stores
+   * get All brands with offset
+   * @param int $offset offset for get brands
    * @return Array array of Objects
    */
-  public function getAllStoreWithOffset(int $offset): void
+  public function getAllBrandWithOffset(int $offset): void
   {
     $offset = $this->getInput($offset);
     $resultArray = Array();
 
     try {
       // run your code here
-      $sql = "SELECT id, title, alias FROM pish_phocamaps_map ORDER BY CAST(alias AS UNSIGNED) ASC limit $offset,10";
+      $sql = "SELECT pish_hikashop_category.category_id,pish_hikashop_category.category_name, pish_hikashop_category.user_id, pish_hikashop_file.file_path as brand_image FROM pish_hikashop_category 
+      INNER JOIN pish_hikashop_file ON pish_hikashop_file.file_ref_id = pish_hikashop_category.category_id 
+      WHERE pish_hikashop_category.category_type='manufacturer' AND pish_hikashop_category.category_parent_id = 10 GROUP BY pish_hikashop_category.category_id limit $offset,10";
 
+      $imagePath = "http://www.hypertester.ir/images/com_hikashop/upload/";
       $result = $this->conn->query($sql);
       if ($result) {
         $rowcount = $result->num_rows;
         if ($rowcount > 0) {
           while($row =$result->fetch_assoc()){
+            $row['brand_image'] = $imagePath . $row['brand_image'];
             $resultArray[]=$row;
           }
         }
@@ -57,11 +61,11 @@ class StoreActions
   }
 
   /**
-   * update one Store
+   * update one Brand
    */
 
   /**
-   * delete one store
+   * delete one brand
    */
 
 
@@ -100,16 +104,16 @@ class StoreActions
 $json = file_get_contents('php://input');
 $post = json_decode($json, true);
 $offset = $post['offset'];
-$typeAction = $post['typAction'];
+$typeAction = $post['typeAction'];
 
-$storeAction = new StoreActions($conn);
+$brandAction = new BrandActions($conn);
 if($typeAction=='select' && isset($offset)){
-  //get all store with offset
-  $storeAction->getAllStoreWithOffset($offset);
+  //get all brand with offset
+  $brandAction->getAllBrandWithOffset($offset);
 }else if($typeAction=='update'){
-  //update one store
+  //update one brand
 }else if($typeAction =='delete'){
-  //delete one store
+  //delete one brand
 }else{
 
 }
