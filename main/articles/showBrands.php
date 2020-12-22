@@ -1,4 +1,4 @@
-  {source}
+{source}
   <style>
     /* Style the tab */
     .tab {
@@ -254,7 +254,6 @@
         hide('#regions')
         show('#brands')
         getAllBrands();
-        alert(brandCount)
       }
       //hide all stores
     }
@@ -345,6 +344,8 @@
      * section actions on brands
      */
     function getAllBrands(type = null) {
+      jQuery("html, body").animate({ scrollTop: jQuery(document).height() }, 400);
+
       if (type == null) {
         jQuery('.brand').remove()
         brandCount = 0
@@ -372,12 +373,25 @@
             <a class="card-link" onclick="getSubBrands(event,${item['category_id']},'subbrand')" class="">
               <p> ${item["category_name"]} </p>
             </a>
+            <ul class="nav justify-content-end " style="display:flex">
+          <li class="nav-item" >
+            <a class="nav-link active" href="#">ویرایش</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">حذف</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#"> محصولات</a>
+          </li>
+          
+        </ul>
           </div>`;
             jQuery('#containerBrands').append(brand)
 
+
           })
           //add button moreStore
-          let moreStore = `<div class="row justify-content-center brand moreBrnadButton">
+          let moreStore = `<div class="row justify-content-center moreShow brand moreBrnadButton">
             <div class="col-xs-12 text-center">
               <button onclick="getAllBrands('more')" class="btn btn-primary">پیشنهاد فروشگاه بیشتر</button>
             </div>
@@ -403,7 +417,6 @@
      * update one brand
      */
     function updateBrand(e, button) {
-      alert('is working')
       e.preventDefault();
 
       let data = {
@@ -506,15 +519,15 @@
      * update one brand
      */
     function getSubBrands(e, category_id,brandType, type = null) {
+      jQuery("html, body").animate({ scrollTop: jQuery(document).height() }, 400);
+
       e.preventDefault();
-      alert(brandType)
       if(brandType=='brand'){
         jQuery('.brand').remove()
         jQuery('.subbrand').remove()
         getAllBrands();
         return;
       }
-      alert('get sub select' + category_id);
       if (type == null) {
         jQuery('.brand').remove()
         jQuery('.subbrand').remove()
@@ -553,13 +566,26 @@
               <a class="card-link" onclick="getSubBrands(event,${item['category_id']},'subbrand')" class="">
                 <p> ${item["category_name"]} </p>
               </a>
+              <ul class="nav justify-content-end " style="display:flex">
+          <li class="nav-item" >
+            <a class="nav-link active" href="#">ویرایش</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">حذف</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#"> محصولات</a>
+          </li>
+          
+        </ul>
             </div>`;
               jQuery('#containerBrands').append(subbrand)
 
             })
           } else {
+            jQuery('.subBrandBack').remove();
             let subbrand = '';
-            subbrand += `<div class="card-flex subbrand brand" >
+            subbrand += `<div class="card-flex subbrand brand subBrandBack" >
           <div class="brandImage">
             <p class="text-light">برندی یافت نشد</p>
           </div>
@@ -567,15 +593,21 @@
               <p class="text-light"> برگشت به عقب </p>
             </a>
           </div>`;
-          jQuery('#containerBrands').append(subbrand)
+          if(jQuery('#containerBrands').children().length){
+
+          }else{
+            jQuery('#containerBrands').append(subbrand)
+
+          }
 
           }
           //add button moreStore
-          let moreStore = `<div class="row justify-content-center subbrand moresubBrnadButton">
+          let moreStore = `<div class="row justify-content-center moreShow subbrand brand moresubBrnadButton">
             <div class="col-xs-12 text-center">
               <button onclick="getSubBrands(event,${category_id},'subbrand','more')" class="btn btn-primary">پیشنهاد فروشگاه بیشتر</button>
             </div>
           </div>`;
+          
           if (type != "more" && subbrandCount == 0) {
             jQuery('#containerBrands').after(moreStore)
           }
