@@ -1,5 +1,4 @@
-  {source}
-  <style>
+  {source}<style>
     /* Style the tab */
     .tab {
       overflow: hidden;
@@ -74,11 +73,9 @@
     #showAddNewBrand {
       margin-top: 40px;
     }
-
     #updateBrand {
-      margin-top: 40px;
+      margin-top:40px;
     }
-
     .modal-header {
       display: flex;
     }
@@ -87,9 +84,6 @@
       margin-right: auto;
     }
 
-    .text-light,.text-white{
-      color:white;
-    }
     /* $document->addStyleDeclaration($style); */
   </style>
 
@@ -114,6 +108,7 @@
     <a href="http://hypertester.ir/index.php?option=com_rsform&view=rsform&formId=72" class="btn btn-primary">
       اظافه کردن فروشگاه جدید
     </a>
+
 
     <!-- start show modal -->
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateBrand" data-whatever="@mdo">Open modal for @mdo</button>
@@ -180,23 +175,23 @@
                         <div class="formControlLabel">آدرس شرکت<strong class="formRequired">(*)</strong></div>
                         <div class="formControls">
                           <div class="formBody">
-                            <textarea class="form-control" cols="50" rows="5" name="Address" id="Address" class="rsform-text-box"></textarea><span class="formValidation"><span id="component136" class="formNoError">Invalid Input</span></span></div>
+                            <textarea  class="form-control" cols="50" rows="5" name="Address" id="Address" class="rsform-text-box"></textarea><span class="formValidation"><span id="component136" class="formNoError">Invalid Input</span></span></div>
                           <p class="formDescription"></p>
                         </div>
                       </div>
-
+                      
                     </fieldset>
                   </form>
                 </div>
               </div>
             </div>
-
+            
             <!-- end modal body -->
           </div>
           <div class="modal-footer row justify-content-center">
             <div class="col-xs-12">
               <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">بستن</button>
-              <button type="button" onclick="updateBrand(event,this)" id="next" class="rsform-submit-button btn btn-primary">بعدی </button>
+              <button type="button" onclick="updateBrand(event,this)"  id="next" class="rsform-submit-button btn btn-primary">بعدی </button>
             </div>
 
           </div>
@@ -204,6 +199,7 @@
       </div>
     </div>
     <!-- end show modal -->
+
 
     <div style="display: flex;flex-direction: row;flex-wrap: wrap;" id="containerStores">
 
@@ -228,7 +224,7 @@
     //default brand offset
     var brandCount = 0;
     var subbrandCount = 0;
-    var beforeCategoryId= {before:0,current:0};
+
     //default store offset
     var storeCount = 0;
 
@@ -254,7 +250,6 @@
         hide('#regions')
         show('#brands')
         getAllBrands();
-        alert(brandCount)
       }
       //hide all stores
     }
@@ -369,7 +364,7 @@
             <div class="brandImage">
             <img src="http:/${item['brand_image']}" >
             </div>
-            <a class="card-link" onclick="getSubBrands(event,${item['category_id']},'subbrand')" class="">
+            <a class="card-link" onclick="getSubBrands(event,${item['category_id']})" class="">
               <p> ${item["category_name"]} </p>
             </a>
           </div>`;
@@ -402,11 +397,11 @@
     /**
      * update one brand
      */
-    function updateBrand(e, button) {
+    function updateBrand(e,button){
       alert('is working')
       e.preventDefault();
-
-      let data = {
+      
+      let data ={
         'CompanyName': document.querySelector('input[name="CompanyName"]').value,
         'brandname': document.querySelector('input[name="brandname"]').value,
         'OwnerName': document.querySelector('input[name="OwnerName"]').value,
@@ -414,7 +409,7 @@
         'phone': document.querySelector('input[name="phone"]').value,
         'Address': document.querySelector('textarea[name="Address"]').value
       };
-
+      
       console.log(data)
       // sent ajax request
       jQuery.ajax({
@@ -502,37 +497,20 @@
       })
     }
 
-    /**
+/**
      * update one brand
      */
-    function getSubBrands(e, category_id,brandType, type = null) {
+    function getSubBrands(e,category_id,type=null){
+      alert('get sub select');
       e.preventDefault();
-      alert(brandType)
-      if(brandType=='brand'){
-        jQuery('.brand').remove()
-        jQuery('.subbrand').remove()
-        getAllBrands();
-        return;
-      }
-      alert('get sub select' + category_id);
       if (type == null) {
-        jQuery('.brand').remove()
         jQuery('.subbrand').remove()
-        subbrandCount = 0;
-        if(beforeCategoryId.current ==0){
-          beforeCategoryId.current = category_id;
-        }
-        beforeCategoryId.before = beforeCategoryId.current;
-        beforeCategoryId.current = category_id;
-        
-       
-
+        subbrandCount = 0
       }
       // sent ajax request
       var data = {
         offset: subbrandCount,
-        typeAction: "subSelect",
-        category_parent_id: category_id
+        typeAction: "subSelect"
       };
       // sent ajax request
       jQuery.ajax({
@@ -543,41 +521,27 @@
         contentType: "application/json",
         success: function(data) {
           console.log(data)
-          if (data.length) {
-            data.forEach(function(item, index) {
-              let subbrand = '';
-              subbrand += ` <div class="card-flex subbrand" >
-              <div class="brandImage">
-              <img src="http:/${item['brand_image']}" >
-              </div>
-              <a class="card-link" onclick="getSubBrands(event,${item['category_id']},'subbrand')" class="">
-                <p> ${item["category_name"]} </p>
-              </a>
-            </div>`;
-              jQuery('#containerBrands').append(subbrand)
-
-            })
-          } else {
-            let subbrand = '';
-            subbrand += `<div class="card-flex subbrand brand" >
-          <div class="brandImage">
-            <p class="text-light">برندی یافت نشد</p>
-          </div>
-            <a class="card-link" onclick="getSubBrands(event,${beforeCategoryId.before},'brand')" class="">
-              <p class="text-light"> برگشت به عقب </p>
+          data.forEach(function(item, index) {
+            console.log(`${item['brand_image']}`)
+            let subbrand = ` <div class="card-flex subbrand" >
+            <div class="brandImage">
+            <img src="http:/${item['brand_image']}" >
+            </div>
+            <a class="card-link" onclick="getSubBrands(event,${item['category_id']})" class="">
+              <p> ${item["category_name"]} </p>
             </a>
           </div>`;
-          jQuery('#containerBrands').append(subbrand)
+            jQuery('#containersubBrands').append(subbrand)
 
-          }
+          })
           //add button moreStore
           let moreStore = `<div class="row justify-content-center subbrand moresubBrnadButton">
             <div class="col-xs-12 text-center">
-              <button onclick="getSubBrands(event,${category_id},'subbrand','more')" class="btn btn-primary">پیشنهاد فروشگاه بیشتر</button>
+              <button onclick="getSubBrands(event,${category_id},'more')" class="btn btn-primary">پیشنهاد فروشگاه بیشتر</button>
             </div>
           </div>`;
           if (type != "more" && subbrandCount == 0) {
-            jQuery('#containerBrands').after(moreStore)
+            jQuery('#containersubBrands').after(moreStore)
           }
           if (data.length == 0) {
             jQuery('.moresubBrnadButton').remove()
@@ -591,6 +555,7 @@
         }
       })
     }
+    
   </script>
 
   {/source}
