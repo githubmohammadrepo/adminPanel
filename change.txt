@@ -1,4 +1,4 @@
-  {source}
+{source}
   <style>
     /* Style the tab */
     .tab {
@@ -42,6 +42,7 @@
 
     .card-flex {
       flex: 25%;
+      max-width: 29.3rem  !important;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -90,6 +91,44 @@
     .text-light,.text-white{
       color:white;
     }
+    .icons {
+      position: relative;
+      z-index: 1;
+    }
+    #myModal {
+      margin-top:40px;
+      width:100% !important;
+    }
+    #myModal  .modal-dialog {
+      width:100% !important;
+    }
+
+    #myModal  .modal-body {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .img-brand,.img-product,.img-subbrand {
+      height: 250px;
+      width: 100%;
+    }
+    .card-link{
+      margin-top: -45px;
+    }
+    .editProductModal {
+      top: 42px;
+      display: block;
+      margin-top: 50px;
+      justify-content: center;
+      width: 80%;
+      margin: auto;
+      z-index: 1024;
+    }
+    .w-75 {
+      width:75% !important;
+    }
+    .w-100{
+      width:100%;
+    }
     /* $document->addStyleDeclaration($style); */
   </style>
 
@@ -123,7 +162,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="exampleModalLabel">New message</h4>
+            <h4 class="modal-title text-center" id="exampleModalLabel">New message</h4>
           </div>
           <div class="modal-body" id="updateModalBody">
             <!-- start modal body -->
@@ -254,7 +293,6 @@
         hide('#regions')
         show('#brands')
         getAllBrands();
-        alert(brandCount)
       }
       //hide all stores
     }
@@ -345,6 +383,8 @@
      * section actions on brands
      */
     function getAllBrands(type = null) {
+      jQuery("html, body").animate({ scrollTop: jQuery(document).height() }, 400);
+
       if (type == null) {
         jQuery('.brand').remove()
         brandCount = 0
@@ -367,17 +407,30 @@
             console.log(`${item['brand_image']}`)
             let brand = ` <div class="card-flex brand" >
             <div class="brandImage">
-            <img src="http:/${item['brand_image']}" >
+            <img src="http://www.hypertester.ir/images/com_hikashop/upload/${item['brand_image']}" class="img-brand" >
             </div>
             <a class="card-link" onclick="getSubBrands(event,${item['category_id']},'subbrand')" class="">
               <p> ${item["category_name"]} </p>
             </a>
+            <ul class="nav justify-content-end " style="display:flex">
+          <li class="nav-item" >
+            <a class="nav-link active" href="#">ویرایش</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">حذف</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#"  onclick="showProducts(event,${item['category_id']})"> محصولات</a>
+          </li>
+          
+        </ul>
           </div>`;
             jQuery('#containerBrands').append(brand)
 
+
           })
           //add button moreStore
-          let moreStore = `<div class="row justify-content-center brand moreBrnadButton">
+          let moreStore = `<div class="row justify-content-center moreShow brand moreBrnadButton">
             <div class="col-xs-12 text-center">
               <button onclick="getAllBrands('more')" class="btn btn-primary">پیشنهاد فروشگاه بیشتر</button>
             </div>
@@ -403,7 +456,6 @@
      * update one brand
      */
     function updateBrand(e, button) {
-      alert('is working')
       e.preventDefault();
 
       let data = {
@@ -506,15 +558,15 @@
      * update one brand
      */
     function getSubBrands(e, category_id,brandType, type = null) {
+      jQuery("html, body").animate({ scrollTop: jQuery(document).height() }, 400);
+
       e.preventDefault();
-      alert(brandType)
       if(brandType=='brand'){
         jQuery('.brand').remove()
         jQuery('.subbrand').remove()
         getAllBrands();
         return;
       }
-      alert('get sub select' + category_id);
       if (type == null) {
         jQuery('.brand').remove()
         jQuery('.subbrand').remove()
@@ -548,18 +600,31 @@
               let subbrand = '';
               subbrand += ` <div class="card-flex subbrand" >
               <div class="brandImage">
-              <img src="http:/${item['brand_image']}" >
+              <img src="http://www.hypertester.ir/images/com_hikashop/upload/${item['brand_image']}" class="img-subbrand">
               </div>
               <a class="card-link" onclick="getSubBrands(event,${item['category_id']},'subbrand')" class="">
                 <p> ${item["category_name"]} </p>
               </a>
+              <ul class="nav justify-content-end " style="display:flex">
+          <li class="nav-item" >
+            <a class="nav-link active" href="#">ویرایش</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">حذف</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" onclick="showProducts(event,${item['category_id']})" href="#"> محصولات</a>
+          </li>
+          
+        </ul>
             </div>`;
               jQuery('#containerBrands').append(subbrand)
 
             })
           } else {
+            jQuery('.subBrandBack').remove();
             let subbrand = '';
-            subbrand += `<div class="card-flex subbrand brand" >
+            subbrand += `<div class="card-flex subbrand brand subBrandBack" >
           <div class="brandImage">
             <p class="text-light">برندی یافت نشد</p>
           </div>
@@ -567,15 +632,21 @@
               <p class="text-light"> برگشت به عقب </p>
             </a>
           </div>`;
-          jQuery('#containerBrands').append(subbrand)
+          if(jQuery('#containerBrands').children().length){
+
+          }else{
+            jQuery('#containerBrands').append(subbrand)
+
+          }
 
           }
           //add button moreStore
-          let moreStore = `<div class="row justify-content-center subbrand moresubBrnadButton">
+          let moreStore = `<div class="row justify-content-center moreShow subbrand brand moresubBrnadButton">
             <div class="col-xs-12 text-center">
               <button onclick="getSubBrands(event,${category_id},'subbrand','more')" class="btn btn-primary">پیشنهاد فروشگاه بیشتر</button>
             </div>
           </div>`;
+          
           if (type != "more" && subbrandCount == 0) {
             jQuery('#containerBrands').after(moreStore)
           }
@@ -591,6 +662,376 @@
         }
       })
     }
+
+
+  /**
+   * show brands product
+   */
+  function showProducts(e,category_id,type=null){
+    e.preventDefault();
+    //hide all
+    // brandcontianer
+
+    let modal = `
+    <div id="myModal" class="modal fade" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="btn btn-primary m-auto productBrands">اظافه کردن محصول جدید</button>
+
+                    <h5 class="modal-title w-100 text-center">Modal Title</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body" id="productModalBody">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+              `;
+
+      if(document.querySelectorAll('#myModal').length){
+        jQuery('#productModalBody').html('')
+
+      }else{
+        jQuery('body').append(modal)
+      }
+      jQuery('#myModal').modal('show');
+
+      // sent ajax request
+    var data = {
+      category_id: category_id
+    };
+    // sent ajax request
+    jQuery.ajax({
+      url: "http://hypertester.ir/serverHypernetShowUnion/GetBrandsProductsWhenClickedBrandsName1.php",
+      method: "POST",
+      data: JSON.stringify(data),
+      dataType: "json",
+      contentType: "application/json",
+      success: function(data) {
+        console.log(data)
+        if (data.length) {
+          data.forEach(function(item, index) {
+            let subbrand = '';
+            
+            subbrand += ` <div class="card-flex subbrand productBrands" style="max-width:270px" data-productId="${item['product_id']}">
+            <div class="brandImage">
+            <img src="${item['product_image']}" class="img-product">
+            </div>
+            <a class="card-link" onclick="getSubBrands(event,${item['product_id']},'subbrand')" class="">
+              <p> ${item["product_name"]} </p>
+            </a>
+
+              <table class="table" style="color:white">
+                <tbody>
+                  <tr>
+                    <td>قسمت محصول</td>
+                    <td>${item['product_price_percentage']}</td>
+                  </tr>
+                  <tr>
+                    <td>کد محصول</td>
+                    <td>${item['product_code']}</td>
+                  </tr>
+                  <tr>
+                    <td>آخرین بازدید</td>
+                    <td>${item['product_last_seen_date']}</td>
+                  <tr>
+                  <tr>  
+                    <td>شرکت سازنده</td>
+                    <td>${item['category_name']}</td>
+                  </tr>
+                  <tr>
+                    <td>واحد شمارش محصول</td>
+                    <td>${item['product_counting_unit']}</td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">توضیحات محصول: ${item['product_description']}</td>
+                  </tr>
+                </tbody>
+              </table>
+            <ul class="nav justify-content-end " style="display:flex">
+              <li class="nav-item" >
+                <a class="nav-link active" 
+                href="#" 
+                onclick="editOneProduct(event,${item['product_id']},
+                '${item['product_name'] ? item['product_name'] : -11}',
+                '${item['product_counting_unit'] ? item['product_counting_unit'] : -11}',
+                '${item['product_package_type'] ? item['product_package_type'] : -11}',
+                '${item['product_weight'] ? item['product_weight'] : -11}',
+                '${item['product_number_in_package'] ? item['product_number_in_package'] : -11}',
+                '${item['product_delivery_time'] ? item['product_delivery_time'] : -11}',
+                '${item['product_msrp'] ? item['product_msrp'] : -11}',
+                '${item['product_sort_price'] ? item['product_sort_price'] : -11}',
+                '${item['product_price_percentage'] ? item['product_price_percentage'] : -11}',
+                '${item['product_sale_type'] ? item['product_sale_type'] : -11 }')" 
+                 data-productId="${item['product_id']}"  >ویرایش</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#" onclick="removeOneProduct(event,${item['product_id']})">حذف</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#"  onclick="showProducts(event,${item['category_id']})" > محصولات</a>
+                <a data-dismiss="modal" data-toggle="modal" href="#editProductModal">Click</a>
+
+              </li>
+              
+            </ul>
+          </div>`;
+            jQuery('#productModalBody').append(subbrand)
+
+          })
+        } else {
+          jQuery('.subBrandBack').remove();
+          let subbrand = '';
+          subbrand += `<div class="card-flex subbrand brand subBrandBack" >
+        <div class="brandImage">
+          <p class="text-light">برندی یافت نشد</p>
+        </div>
+          <a class="card-link" onclick="getSubBrands(event,${beforeCategoryId.before},'brand')" class="">
+            <p class="text-light"> برگشت به عقب </p>
+          </a>
+        </div>`;
+        if(jQuery('#productModalBody').children().length){
+
+        }else{
+          jQuery('#productModalBody').append(subbrand)
+
+        }
+
+        }
+        //add button moreStore
+        let moreStore = `<div class="row justify-content-center moreShow subbrand brand moresubBrnadButton">
+          <div class="col-xs-12 text-center">
+            <button onclick="getSubBrands(event,${category_id},'subbrand','more')" class="btn btn-primary">پیشنهاد فروشگاه بیشتر</button>
+          </div>
+        </div>`;
+        
+        if (type != "more" && subbrandCount == 0) {
+          jQuery('#containerBrands').after(moreStore)
+        }
+        if (data.length == 0) {
+          jQuery('.moresubBrnadButton').remove()
+        }
+
+        subbrandCount += 10;
+      removeSlasheImageSrc('.img-product')
+
+      },
+      error: function(xhr) {
+        console.log('error', xhr);
+
+      }
+    })
+
+  }
+
+  /**
+   * function remove slashes from subbrand src image
+   */
+  function removeSlasheImageSrc(className){
+    let el = document.querySelectorAll(className);
+    if(el.length){
+      el.forEach(function(value,index){
+        value.src = value.src.replace('http://hypertester.ir/','')
+      })
+    }
+  }
+
+
+  /**
+   * editOneProduct(event,54323)
+   */
+  function editOneProduct(
+    e,
+    product_id,
+    productName,
+    productUnit,
+    productPackageType,
+    productWeight,
+    productCountInPackage,
+    productDeliverTime,
+    productConsumerRate,
+    productMarketRate,
+    productSaleType) {
+    e.preventDefault();
+    let productBrands = document.querySelectorAll('.modal-body .productBrands');
+    if(productBrands.length){
+      productBrands.forEach(function(value,index){
+        value.style.display = 'none';
+      })
+    }
+    //hide all
+    if(document.querySelectorAll('.editProductModal').length){
+      document.querySelector('.editProductModal').remove();
+    }
+    // add new modal product
+    let editModal = `
+      <form method="post" id="insert_form" onsubmit ="editOneProductSentAjax(event,'${product_id}','${productName}','${productUnit}','${productPackageType}','${productWeight}','${productCountInPackage}','${productDeliverTime}','${productConsumerRate}','${productMarketRate}','${productSaleType}')" class="editProductModal">
+          <label>نام محصول را وارد نمایید</label>
+          <input type="text" name="name" value="${productName}" id="name" class="form-control">
+          
+          <label>واحد شمارش محصول چیست؟</label>
+          <textarea type="text" name="counting" id="counting" class="form-control"> ${productUnit}</textarea>
+          
+          <label>نوع بسته بندی</label>
+          <input type="text" name="packagetype" value="${productPackageType}" id="packagetype" class="form-control">
+          
+          <label>وزن بسته</label>
+          <input type="text" name="weight" value="${productWeight}" id="weight" class="form-control">
+          
+          <label>تعداد در بسته</label>
+          <input type="text" name="numberinpackage" value="${productCountInPackage}" id="numberinpackage" class="form-control">
+          
+          <label>مدت زمان تحویل</label>
+          <input type="text" name="deliverytime" value="${productDeliverTime}" id="deliverytime" class="form-control">
+          
+          <label>نرخ مصرف کننده</label>
+          <input type="text" name="msrp" id="msrp" value="${productConsumerRate}" class="form-control">
+          
+          <label>نرخ سوپرمارکت</label>
+          <input type="text" name="sortprice" id="sortprice" value="${productMarketRate}" class="form-control">
+          
+          <label>نحوه تسویه حساب</label>
+          <input type="text" name="saletype" value="${productSaleType}" id="saletype" class="form-control">
+          
+          <input type="hidden" name="product_id"  id="product_id" value="${product_id}">
+          <input type="submit" name="insert" id="insert" value="Update" onclick="editOneProductSentAjax(event,'${product_id}','${productName}','${productUnit}','${productPackageType}','${productWeight}','${productCountInPackage}','${productDeliverTime}','${productConsumerRate}','${productMarketRate}','${productSaleType}')" class="btn btn-success">
+      </form>
+    `;
+
+
+    jQuery('#myModal .modal-dialog .modal-content .modal-body').append(editModal)
+    jQuery('#myModal').modal('show')
+    
+  }
+
+
+  /**
+   * save update product info
+   */
+  function editOneProductSentAjax(e,
+    product_id,  
+    productName,
+    productUnit,
+    productPackageType,
+    productWeight,
+    productCountInPackage,
+    productDeliverTime,
+    productConsumerRate,
+    productMarketRate,
+    productSaleType
+    ) {
+      e.preventDefault();
+      jQuery('.updateProductINfo').remove();
+    // sent ajax request
+    var data = {
+      product_id: product_id,
+      name:document.querySelector('input[name="name"]').value,
+      counting :document.querySelector('textarea[name="counting"]').value,
+      packagetype :document.querySelector('input[name="packagetype"]').value,
+      weight :document.querySelector('input[name="weight"]').value,
+      numberinpackage :document.querySelector('input[name="numberinpackage"]').value,
+      deliverytime :document.querySelector('input[name="deliverytime"]').value,
+      msrp :document.querySelector('input[name="msrp"]').value,
+      sortprice :document.querySelector('input[name="sortprice"]').value,
+      saletype :document.querySelector('input[name="saletype"]').value,
+      typeAction:'edit'
+    };
+    console.log(data)
+    
+    // display alert
+    let alert= `<div class="alert alert-danger updateProductINfo modal-brand text-center" role="alert">
+    اطلاعات شما از قبل موجود هست
+    </div>`;
+    if(data.product_id=='-11' || data.name=='-11' || data.counting=='-11' || data.packagetype=='-11' || data.weight=='-11' || data.numberinpackage=='-11' || data.deliverytime=='-11' || data.msrp=='-11' || data.saletype=='-11') {
+      jQuery('.modal-header').after(alert);
+    }
+    
+    // let product_id = document.querySelector('input[name="product_id"]').value;
+    
+    // sent ajax request
+    jQuery.ajax({
+      url: "http://hypertester.ir/serverHypernetShowUnion/productShow.php",
+      method: "POST",
+      data: JSON.stringify(data),
+      dataType: "json",
+      contentType: "application/json",
+      success: function(data) {
+        if(data[0]){
+          jQuery('.editProductModal').html(`<div class="alert alert-success updateProductINfo modal-brand text-center" role="alert">محصول شما با موفقیت اپدیت شد</div>`)
+          setTimeout(() => {
+              
+              let productBrands = document.querySelectorAll('.modal-body .productBrands');
+              if(productBrands.length){
+                productBrands.forEach(function(value,index){
+                  value.style.display = 'block';
+                })
+              }
+              //hide all
+              if(document.querySelectorAll('.editProductModal').length){
+                document.querySelector('.editProductModal').remove();
+              }
+              jQuery('#myModal').modal('show')
+
+            }, 3000);
+        }else{
+          jQuery('.modal-header').after(`<div class="alert alert-danger updateProductINfo modal-brand text-center" role="alert">
+    اطلاعات شما از قبل موجود هست
+    </div>`);
+
+        }
+        
+      },
+      error: function(xhr) {
+        console.log('error', xhr);
+
+      }
+    })
+  }
+
+  /**
+   * removeOneProduct(event,54323)
+   */
+  function removeOneProduct(e,product_id) {
+    e.preventDefault();
+    //hide all
+    // brandcontianer
+
+    // sent ajax request
+    var data = {
+      product_id: product_id,
+      typeAction:'delete'
+    };
+    // sent ajax request
+    jQuery.ajax({
+      url: "http://hypertester.ir/serverHypernetShowUnion/productShow.php",
+      method: "POST",
+      data: JSON.stringify(data),
+      dataType: "json",
+      contentType: "application/json",
+      success: function(data) {
+        if(data[0]==true){
+          let el =document.querySelector('div[data-productId="'+product_id+'"]');
+          el.innerHTML = `<h2>محصول مورد نظر حذف شد</h2>`
+          el.style.color = "white"
+          setTimeout(() => {
+            document.querySelector('div[data-productId="'+product_id+'"]').remove()
+            
+          }, 3500);
+          //append alert to modal header
+        }
+        
+      },
+      error: function(xhr) {
+        console.log('error', xhr);
+
+      }
+    })
+  }
   </script>
 
   {/source}

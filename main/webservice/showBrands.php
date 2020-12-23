@@ -207,7 +207,11 @@ if ($typeAction == 'select' && isset($offset)) {
   $category_parent_id = $post['category_parent_id'];
   
   $brandAction->getAllSubBrandWithOffset($offset,$category_parent_id);
-} else if ($typeAction == 'update') {
+} else if($typeAction == 'deleteBrand' && isset($offset)){
+  $category_parent_id = $post['category_parent_id'];
+  
+  $brandAction->getAllSubBrandWithOffset($offset,$category_parent_id);
+}else if ($typeAction == 'update') {
   //update one brand
 } else if ($typeAction == 'delete') {
   //delete one brand
