@@ -237,7 +237,7 @@ class BrandActions
     $category_published = $this->getInput($category_published);
     $typeAction = $this->getInput($typeAction);
     
-    $sql = "UPDATE pish_hikashop_category SET `user_id` =$user_id,`category_parent_id`=$category_parent_id,`category_name`=$category_name,`category_description`=$category_description,`category_published`=$category_published WHERE `category_id` =$category_id";
+    $sql = "UPDATE pish_hikashop_category SET `user_id` =$user_id,`category_parent_id`=$category_parent_id,`category_name`='$category_name',`category_description`='$category_description',`category_published`=$category_published WHERE `category_id` =$category_id";
     
     $result = $this->conn->query($sql);
     if($result){
@@ -249,6 +249,7 @@ class BrandActions
       }
     }else{
       $this->resultJsonEncode(false);
+      die($sql);
     }
   }
 
@@ -316,14 +317,14 @@ if ($typeAction == 'select') {
   $category_id = $post['category_id'];
   $brandAction->getAllCategoryParent($category_id);
 }else if ($typeAction == 'updateOneBrand') {
-  echo $category_id=$post['category_id'];
-  die('');
-  echo $user_id=$post['user_id'];
-  echo $category_parent_id=$post['category_parent_id'];
-  echo $category_name=$post['category_name'];
-  echo $category_description=$post['category_description'];
-  echo $category_published=$post['category_published'];
-  echo $typeAction=$post['typeAction'];
+  $category_id=$post['category_id'];
+  $user_id=$post['user_id'];
+  $category_parent_id=$post['category_parent_id'];
+  $category_name=$post['category_name'];
+  $category_description=$post['category_description'];
+  $category_published=$post['category_published'];
+  $typeAction=$post['typeAction'];
+  
   //update one brand
   $brandAction->updateOneBrand(
     $category_id,
