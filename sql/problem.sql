@@ -1,0 +1,21 @@
+ update pish_hikashop_product
+LEFT JOIN pish_hikashop_product_category
+ON pish_hikashop_product.product_id= pish_hikashop_product_category.product_id
+
+SET pish_hikashop_product.product_manufacturer_id = pish_hikashop_product_category.category_id
+WHERE pish_hikashop_product_category.category_id IN (SELECT pish_hikashop_product_category.category_id FROM `pish_hikashop_product_category` 
+left JOIN
+pish_hikashop_category ON pish_hikashop_product_category.category_id= pish_hikashop_category.category_id AND `pish_hikashop_category`.category_type LIKE 'manufacturer')
+
+SELECT pish_hikashop_product_category.category_id FROM `pish_hikashop_product_category` left JOIN pish_hikashop_category ON pish_hikashop_product_category.category_id= pish_hikashop_category.category_id
+
+-- original
+ update pish_hikashop_product
+LEFT JOIN pish_hikashop_product_category
+ON pish_hikashop_product.product_id= pish_hikashop_product_category.product_id
+
+SET pish_hikashop_product.product_manufacturer_id = pish_hikashop_product_category.category_id
+WHERE pish_hikashop_product_category.category_id IN (
+   SELECT category_id FROM `pish_hikashop_product_category`left JOIN
+`pish_hikashop_category WHERE pish_hikashop_product_category.category_id= pish_hikashop_category.category_id
+and`pish_hikashop_category` .category_type LIKE 'manufacturer' )

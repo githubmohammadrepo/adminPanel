@@ -122,22 +122,17 @@ class CompanyActions
    * @param int $offset offset for get companies
    * @return Array array of Objects
    */
-  public function getAllProductsCompanyWithOffset(int $offset, int $company_id): void
+  public function getAllProductsCompanyWithOffset(int $offset, int $user_id): void
   {
     $offset = $this->getInput($offset);
-    $company_id = $this->getInput($company_id);
+    $user_id = $this->getInput($user_id);
     $resultArray = array();
 
     try {
       // run your code here
-      $sql = "SELECT Company.*,pish_hikashop_product.*
-      FROM (SELECT  pish_phocamaps_marker_company.id
-             ,pish_phocamaps_marker_company.catid
-      FROM pish_phocamaps_marker_company
-      WHERE pish_phocamaps_marker_company.id = $company_id limit $offset,10)as Company
-      
-      INNER JOIN pish_hikashop_product
-      ON Company.catid = pish_hikashop_product.product_manufacturer_id";
+      $sql = "SELECT NewTable.* from (SELECT Category.*,pish_hikashop_product.* FROM (SELECT pish_hikashop_category.category_id,pish_hikashop_category.user_id FROM pish_hikashop_category WHERE pish_hikashop_category.user_id IN (1514) )AS Category
+      LEFT JOIN pish_hikashop_product 
+      ON Category.category_id = pish_hikashop_product.product_manufacturer_id) as NewTable";
 
       $result = $this->conn->query($sql);
       if ($result) {
@@ -151,6 +146,7 @@ class CompanyActions
     } catch (exception $e) {
       //code to handle the exception
       $this->resultJsonEncode($resultArray);
+      return;
     }
     //output data
     $this->resultJsonEncode($resultArray);
@@ -356,8 +352,8 @@ if ($typeAction == 'select') {
   $companyAction->deleteOneCompany($company_id);
 } else if ($typeAction == 'productCompany') {
   $offset = (int)$post['offset'];
-  $company_id = (int)$post['company_id'];
-  $companyAction->getAllProductsCompanyWithOffset($offset, $company_id);
+  $user_id = (int)$post['user_id'];
+  $companyAction->getAllProductsCompanyWithOffset($offset, $user_id);
 } else if ($typeAction == 'getStatusCompanies') {
   $companyUserIds = $post['companyUserIds'];
   $companyAction->getCompanyStatus($companyUserIds);

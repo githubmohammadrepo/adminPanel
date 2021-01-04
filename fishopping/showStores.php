@@ -234,17 +234,18 @@ if($typeAction=='select' && isset($offset)){
   //get all store with offset
   $storeAction->getAllStoreWithOffset($offset);
 }else if($typeAction=='update'){
-  $store_id = $post['store_id,'];
-  $ShopName = $post['ShopName,'];
-  $OwnerName = $post['OwnerName,'];
-  $phone = $post['phone,'];
-  $province = $post['province,'];
-  $city = $post['city,'];
-  $MobilePhone = $post['MobilePhone,'];
-  $description = $post['description,'];
-  $published = $post['published,'];
-  $lat = $post['latCusLocation,'];
-  $lng = $post['lngCusLocation'];
+  echo $store_id = $post['store_id,'];
+  echo $ShopName = $post['ShopName,'];
+  echo $OwnerName = $post['OwnerName,'];
+  echo $phone = $post['phone,'];
+  echo $province = $post['province,'];
+  echo $city = $post['city,'];
+  echo $MobilePhone = $post['MobilePhone,'];
+  echo $description = $post['description,'];
+  echo $published = $post['published,'];
+  echo $lat = $post['latCusLocation,'];
+  echo $lng = $post['lngCusLocation'];
+  die();
   //update one store
   $storeAction->upateStore(
     $store_id,

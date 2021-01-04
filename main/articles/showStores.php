@@ -539,7 +539,7 @@ $contents = json_decode($output, true);
                            <form class="form-horizontal" id="formEditStore">
                               <div class="form-group">
                                  <div class="col-sm-10">
-                                    <input type="email" class="form-control" value="${data.store[0]['ShopName']}" id="ShopName" placeholder="نام فروشگاه">
+                                    <input type="text" class="form-control" name="ShopName" value="${data.store[0]['ShopName']}" id="ShopName" placeholder="نام فروشگاه">
                                  </div>
                                  <label for="ShopName" class="col-sm-2 control-label">نام فروشگاه</label>
                               </div>
@@ -613,7 +613,7 @@ $contents = json_decode($output, true);
 
                               <div class="form-group">
                                  <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="lngCusLocation" name="lngCusLocation" value="51.39178988" placeholder="نام صاحب فروشگاه">
+                                    <input type="text" class="form-control" id="lngCusLocation" name="lngCusLocation" value="51.39178988" placeholder="عرض جغرافیایی">
                                  </div>
                                  <label for="lngCusLocation" class="col-sm-2 control-label">طول جغرافیایی</label>
                               </div>
@@ -622,7 +622,7 @@ $contents = json_decode($output, true);
 
                               <div class="form-group">
                                  <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="latCusLocation" name="latCusLocation" value="51.39178988" placeholder="نام صاحب فروشگاه">
+                                    <input type="text" class="form-control" id="latCusLocation" name="latCusLocation" value="51.39178988" placeholder="طول جغرافیایی">
                                  </div>
                                  <label for="latCusLocation" class="col-sm-2 control-label">عرض جغرافیایی</label>
                               </div>

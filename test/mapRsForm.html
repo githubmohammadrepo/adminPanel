@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="http://tabatabaee.info/scripts/map.js"></script>
+<link href="http://tabatabaee.info/scripts/mapbox-gl.css" rel="stylesheet" />
+<style>
+  body { margin: 0; padding: 0; }
+  #map{position: absolut;top:0;bottom:0;
+
+width:100%;
+
+height:500px;}
+</style>
+</head>
+<body>
+  
+  <form>
+    <label for="lngCusLocation" >طول جغرافیایی</label>
+    <input id="lngCusLocation" name="lngCusLocation" />
+  
+  <br>
+  <br>
+    <label for="latCusLocation">عرض جغرافیایی</label>
+    <input id="latCusLocation"  name="latCusLocation" />
+  </form>
+  <br>
+  <br>
+    <div id="map" />
+  
+  <script>
+    var map = initMap('map');
+    
+    // Change Center
+    map.setCenter([51.39, 35.70]); 
+    
+    //Add Custom Marker
+    var icon = createIcon('http://tabatabaee.info/images/marker/marker-48.png',48,48);
+    var marker = AddMarker(map,[51.39178988, 35.70056027],icon,true);
+  
+    function onDragEnd() 
+    {
+      var lngLat = marker.getLngLat();
+      document.getElementById("lngCusLocation").value = lngLat.lng;
+      document.getElementById("latCusLocation").value = lngLat.lat;
+    }
+    marker.on('dragend', onDragEnd);
+  
+  </script>
+</body>
+</html>
